@@ -3,19 +3,22 @@
 namespace App\Rules;
 
 use Closure;
-use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Contracts\Validation\Rule;
 
-class Uppercase implements ValidationRule
+class Uppercase implements Rule 
 {
-    /**
-     * Run the validation rule.
-     *
-     * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
-     */
-    public function validate(string $attribute, mixed $value, Closure $fail): void
+    public function passes($attribute, $value)
     {
-        if (ucfirst($value) !== $value) {
-            $fail("The $attribute must start with an uppercase letter.");
+        if (empty($value)) {
+            return false;
         }
+
+        $firstCharacter = $value[0];
+        return $firstCharacter === strtoupper($firstCharacter);
+    }
+
+    public function message()
+    {
+        return 'The title does not start with an uppercased letter';
     }
 }
